@@ -1,0 +1,100 @@
+<div class="container mt-4">
+  <!-- Lieux affichés une fois chargés -->
+  <ng-container *ngIf="loadingVenues; else showVenuesList">
+    <ng-container *ngTemplateOutlet="showLoader"></ng-container>
+  </ng-container>
+</div>
+
+<ng-template #showLoader>
+  <!-- Loader affiché pendant le chargement des détails -->
+  <div class="d-flex align-items-center">
+    <strong role="status">Chargement...</strong>
+    <div class="spinner-border ms-auto" aria-hidden="true"></div>
+  </div>
+</ng-template>
+
+<ng-template #showVenuesList>
+  <hr>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="col-auto">
+      <h1 class="mb-4">Lieux</h1>
+    </div>
+    <div class="col-auto">
+      <!-- Bouton pour ajouter un lieu -->
+      <button class="btn btn-primary mb-3" (click)="open(addVenueFormTemplate)" aria-label="Ajouter un lieu">
+        <i class="bi bi-plus-circle"></i>
+      </button>
+    </div>
+  </div>
+  <!-- Liste des lieux -->
+  <ul class="list-group">
+    <li *ngFor="let venue of filteredVenues"
+        class="list-group-item d-flex justify-content-between align-items-center">
+
+      <div>
+        <span *ngIf="venue.venueType != undefined"><ng-icon [name]="venue.venueType.icon"></ng-icon>
+          {{ venue.venueType.name }} - </span>
+        <strong> {{ venue.name }}</strong> <span class="text-muted">
+        ({{ venue.streetNumber }} {{ venue.street }}, {{ venue.zipCode }} {{ venue.city }} - {{ venue.country }})</span>
+        <strong *ngIf="venue.machineIds != undefined && venue.machineIds.length > 0"> - {{ venue.machineIds.length }}
+          équipement{{ venue.machineIds.length > 1 ? 's' : '' }}</strong>
+      </div>
+
+      <!-- Bouton pour afficher les détails du lieu -->
+      <button class="btn btn-info btn-sm" (click)="viewVenueDetails(venue.id)" aria-label="Détails">
+        <ng-icon name="bootstrapInfoCircle"></ng-icon>
+      </button>
+    </li>
+  </ul>
+</ng-template>
+
+<!-- Modal Template for adding venue -->
+<ng-template #addVenueFormTemplate>
+  <form [formGroup]="addVenueForm" (ngSubmit)="addVenue()">
+    <div class="modal-header">
+      <h5 class="modal-title" id="addVenueModalLabel">Ajouter un lieu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="close()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="venueName" class="form-label">Nom</label>
+        <input type="text" id="venueName" class="form-control" formControlName="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="venueTypeId" class="form-label">Type de lieu</label>
+        <select id="venueTypeId" class="form-select" formControlName="venueTypeId" required>
+          <option value="" disabled>Sélectionnez un type</option>
+          <option *ngFor="let venueType of venueTypes" [value]="venueType.id">
+            {{ venueType.name }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="venueStreetNumber" class="form-label">N° de rue</label>
+        <input type="text" id="venueStreetNumber" class="form-control" formControlName="streetNumber" required>
+      </div>
+      <div class="mb-3">
+        <label for="venueStreet" class="form-label">Rue</label>
+        <input type="text" id="venueStreet" class="form-control" formControlName="street" required>
+      </div>
+      <div class="mb-3">
+        <label for="venueZipCode" class="form-label">Code Postal</label>
+        <input type="text" id="venueZipCode" class="form-control" formControlName="zipCode" required>
+      </div>
+      <div class="mb-3">
+        <label for="venueCity" class="form-label">Ville</label>
+        <input type="text" id="venueCity" class="form-control" formControlName="city" required>
+      </div>
+      <div class="mb-3">
+        <label for="venueCountry" class="form-label">Pays</label>
+        <input type="text" id="venueCountry" class="form-control" formControlName="country" required>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <fieldset>
+        <app-altcha formControlName="venue_altcha"/>
+      </fieldset>
+      <button type="submit" class="btn btn-primary venue-add" [disabled]="addVenueForm.invalid">Ajouter</button>
+    </div>
+  </form>
+</ng-template>

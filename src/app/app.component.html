@@ -1,0 +1,37 @@
+<!-- Navbar avec champ de recherche conditionné -->
+<header [ngClass]="{'sticky-nav': isSticky}" class="p-3 text-bg-dark">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a routerLink="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none logo"
+         [ngClass]="{'sticky-logo': isSticky}">
+        <ng-icon-stack [size]="isSticky ? '1em' : '2em'" class="icon">
+          <ng-icon name="bootstrapBullseye" size="64px"/>
+          <ng-icon name="flipper" size="48px"/>
+        </ng-icon-stack>
+      </a>
+
+      <ul class="nav nav-underline col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li class="nav-item">
+          <a routerLink="/venues" routerLinkActive="text-secondary" class="nav-link px-2 text-white">Lieux</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/machines" routerLinkActive="text-secondary" class="nav-link px-2 text-white">Équipements</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/manufacturers" routerLinkActive="text-secondary"
+             class="nav-link px-2 text-white">Fabricants</a>
+        </li>
+      </ul>
+
+      <!-- Recherche affichée uniquement sur les bonnes routes -->
+      <div *ngIf="showSearch" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+        <input type="text" class="form-control form-control-dark text-bg-dark"
+               placeholder="Rechercher dans la page...."
+               [(ngModel)]="searchText"
+               (input)="onSearchChange()"
+               aria-label="Rechercher...">
+      </div>
+    </div>
+  </div>
+</header>
+<router-outlet/>

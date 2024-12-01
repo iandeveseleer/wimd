@@ -1,0 +1,9 @@
+#map {
+  height: 256px !important;
+  width: 100% !important;
+}
+
+.venue-pin {
+  width: 40px !important;
+  height: 40px !important;
+}

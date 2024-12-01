@@ -1,0 +1,88 @@
+<div class="container mt-4">
+  <!-- Machines affichés une fois chargés -->
+  <ng-container *ngIf="loadingMachines; else showMachinesList">
+    <ng-container *ngTemplateOutlet="showLoader"></ng-container>
+  </ng-container>
+
+  <ng-template #showLoader>
+    <!-- Loader affiché pendant le chargement des détails -->
+    <div class="d-flex align-items-center">
+      <strong role="status">Chargement...</strong>
+      <div class="spinner-border ms-auto" aria-hidden="true"></div>
+    </div>
+  </ng-template>
+
+  <ng-template #showMachinesList>
+    <hr>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="col-auto">
+        <h1 class="mb-4">Équipements</h1>
+      </div>
+      <div class="col-auto">
+        <!-- Bouton pour ajouter un équipement -->
+        <button class="btn btn-primary mb-3" (click)="open(addMachineFormTemplate)" aria-label="Ajouter un équipement">
+          <i class="bi bi-plus-circle"></i>
+        </button>
+      </div>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let machine of filteredMachines"
+          class="list-group-item d-flex justify-content-between align-items-center">
+
+        <div>
+          <strong>
+            <ng-icon *ngIf="machine.type.icon != undefined" [name]="machine.type.icon"></ng-icon>
+            {{ machine.type.name }} - {{ machine.name }}</strong> <span
+          class="text-muted" *ngIf="machine.manufacturer != undefined"> ({{ machine.manufacturer.name }})</span>
+          <strong *ngIf="machine.venues != undefined && machine.venues.length > 0"> - Dans {{ machine.venues.length }}
+            lieu{{ machine.venues.length > 1 ? 'x' : '' }}</strong>
+        </div>
+
+        <!-- Bouton pour afficher les détails de la machine -->
+        <button class="btn btn-info btn-sm" (click)="viewMachineDetails(machine.id)" aria-label="Détails">
+          <ng-icon name="bootstrapInfoCircle"></ng-icon>
+        </button>
+      </li>
+    </ul>
+  </ng-template>
+
+  <!-- Modal Template for adding machine -->
+  <ng-template #addMachineFormTemplate>
+    <form [formGroup]="addMachineForm" (ngSubmit)="addMachine()">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMachineFormLabel">Ajouter un équipement</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="machineName" class="form-label">Nom de l'équipement</label>
+          <input type="text" id="machineName" class="form-control" formControlName="name" required>
+        </div>
+        <div class="mb-3">
+          <label for="machineManufacturerId" class="form-label">Fabricant</label>
+          <select id="machineManufacturerId" class="form-select" formControlName="manufacturerId" required>
+            <option value="" disabled>Sélectionnez un fabricant</option>
+            <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">
+              {{ manufacturer.name }}
+            </option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="machineType" class="form-label">Type d'équipement</label>
+          <select id="machineType" class="form-select" formControlName="typeId" required>
+            <option value="" disabled>Sélectionnez un type</option>
+            <option *ngFor="let machineType of machineTypes" [value]="machineType.id">
+              {{ machineType.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <fieldset>
+          <app-altcha formControlName="machine_altcha"/>
+        </fieldset>
+        <button type="submit" class="btn btn-primary" [disabled]="addMachineForm.invalid">Ajouter</button>
+      </div>
+    </form>
+  </ng-template>
+</div>

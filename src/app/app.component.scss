@@ -1,0 +1,69 @@
+@import "bootstrap/scss/bootstrap";
+@import "../styles/variables";
+
+.nav-link {
+  // Default state: Inactive link
+  color: var(--bs-white) !important; // Enforce text-primary color
+
+  &:hover {
+    color: var(--bs-primary-dark) !important; // Optional hover effect
+  }
+
+  &.text-secondary {
+    // Active state: Override inactive color
+    color: var(--bs-secondary) !important; // Enforce text-secondary color
+  }
+}
+
+.icon {
+  /* Set default fill color */
+  fill: currentColor; /* Use the color of the text (currentColor) */
+  [name="flipper"] {
+    padding-top: 13px;
+    color: var(--bs-link-color);
+    padding-right: 74px;
+  }
+}
+
+.logo {
+  display: block !important;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.sticky-logo {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+  /* Shifts logo to the left on scroll */
+}
+
+.nav {
+  transition: all 0.3s ease-in-out !important;
+}
+
+.sticky-nav {
+  background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity, 0.8)) !important;
+  padding: 0.5rem 0 !important; /* Smaller padding on scroll */
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+
+  .logo {
+    @include media-breakpoint-up(lg) {
+      //margin-right: 1rem;
+      margin-bottom: 0;
+      margin-right: auto; /* Move logo to the far left */
+    }
+  }
+
+  .nav {
+    @include media-breakpoint-up(lg) {
+      justify-content-end:before; /* Align links to the right */
+    }
+  }
+}

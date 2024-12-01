@@ -1,0 +1,61 @@
+<div class="container mt-4">
+  <!-- Fabricants affichés une fois chargés -->
+  <ng-container *ngIf="loadingManufacturers; else showManufacturersList">
+    <ng-container *ngTemplateOutlet="showLoader"></ng-container>
+  </ng-container>
+</div>
+
+<ng-template #showLoader>
+  <!-- Loader affiché pendant le chargement des détails -->
+  <div class="d-flex align-items-center">
+    <strong role="status">Chargement...</strong>
+    <div class="spinner-border ms-auto" aria-hidden="true"></div>
+  </div>
+</ng-template>
+
+<ng-template #showManufacturersList>
+  <hr>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="col-auto">
+      <h1 class="mb-4">Fabricants</h1>
+    </div>
+    <div class="col-auto">
+      <!-- Bouton pour ajouter un fabricant -->
+      <button class="btn btn-primary mb-3" (click)="open(addManufacturerFormTemplate)"
+              aria-label="Ajouter un fabricant">
+        <i class="bi bi-plus-circle"></i>
+      </button>
+    </div>
+  </div>
+  <ul class="list-group">
+    <li *ngFor="let manufacturer of filteredManufacturers"
+        class="list-group-item d-flex justify-content-between align-items-center">
+
+      <div>
+        <strong>{{ manufacturer.name }}</strong>
+      </div>
+    </li>
+  </ul>
+</ng-template>
+
+<!-- Modal Template for adding manufacturer -->
+<ng-template #addManufacturerFormTemplate>
+  <form [formGroup]="addManufacturerForm" (ngSubmit)="addManufacturer()">
+    <div class="modal-header">
+      <h5 class="modal-title" id="addManufacturerFormLabel">Ajouter un fabricant</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="close()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="manufacturerName" class="form-label">Nom du fabricant</label>
+        <input type="text" id="manufacturerName" class="form-control" formControlName="name" required>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <fieldset>
+        <app-altcha formControlName="manufacturer_altcha"/>
+      </fieldset>
+      <button type="submit" class="btn btn-primary" [disabled]="addManufacturerForm.invalid">Ajouter</button>
+    </div>
+  </form>
+</ng-template>

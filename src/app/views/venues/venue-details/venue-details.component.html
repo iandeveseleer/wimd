@@ -1,0 +1,117 @@
+<div class="container mt-4">
+  <!-- Loader while data is loading -->
+  <div *ngIf="loading" class="d-flex align-items-center">
+    <strong role="status">Chargement...</strong>
+    <div class="spinner-border ms-auto" aria-hidden="true"></div>
+  </div>
+
+  <!-- Venue details -->
+  <div class="row mb-3" *ngIf="!loading">
+    <!-- Venue Details -->
+    <div class="col-md-6">
+      <h2 class="mb-3">{{ venue.name }}</h2>
+      <p>{{ venue.venueType.name }}</p>
+      <p class="text-muted">
+        {{ venue.streetNumber }} {{ venue.street }}, {{ venue.zipCode }} {{ venue.city }} - {{ venue.country }}
+      </p>
+    </div>
+
+    <!-- Map Section -->
+    <div class="col-md-6">
+      <app-map
+        [address]="{
+        name: venue.name,
+        streetNumber: venue.streetNumber,
+        street: venue.street,
+        city: venue.city,
+        zip_code: venue.zipCode,
+        country: venue.country
+      }"
+      ></app-map>
+    </div>
+  </div>
+  <hr>
+  <div class="d-flex justify-content-between align-items-center">
+    <h3>Équipements</h3>
+    <div class="btn-group">
+      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addMachineModal"
+              aria-label="Ajouter un équipement">
+        <ng-icon name="bootstrapPlusCircle"></ng-icon>
+      </button>
+      <button [disabled]="venue.machines.length == 0" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#removeMachineModal"
+              aria-label="Supprimer un équipement">
+        <ng-icon name="bootstrapDashCircle"></ng-icon>
+      </button>
+    </div>
+  </div>
+  <hr>
+  <ul class="list-group">
+    <li *ngFor="let machine of venue.machines"
+        class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ machine.name }}</strong> <span class="text-muted">({{ machine.manufacturer.name }})</span>
+      </div>
+      <button class="btn btn-info btn-sm" (click)="viewMachineDetails(machine.id)">
+        <i class="bi bi-info-circle"></i> Détails
+      </button>
+    </li>
+  </ul>
+
+  <!-- Action Buttons -->
+  <div class="mt-4">
+
+  </div>
+</div>
+
+<!-- Add Machine Modal -->
+<div class="modal fade" id="addMachineModal" tabindex="-1" aria-labelledby="addMachineModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMachineModalLabel">Ajouter un équipement</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <select class="form-select" [(ngModel)]="selectedMachineId">
+          <option value="" disabled selected>Choisir un équipement</option>
+          <option *ngFor="let machine of filteredMachinesToAdd" [value]="machine.id">
+            {{ machine.name }} ({{ machine.manufacturer.name }})
+          </option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-success" (click)="addMachine()" data-bs-dismiss="modal"
+                [disabled]="!selectedMachineId">Ajouter
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Remove Machine Modal -->
+<div class="modal fade" id="removeMachineModal" tabindex="-1" aria-labelledby="removeMachineModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="removeMachineModalLabel">Supprimer un équipement</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <select class="form-select" [(ngModel)]="selectedMachineId">
+          <option value="" disabled selected>Choisir un équipement</option>
+          <option *ngFor="let machine of filteredMachinesToRemove" [value]="machine.id">
+            {{ machine.name }} ({{ machine.manufacturer.name }})
+          </option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-danger" (click)="removeMachine()" data-bs-dismiss="modal"
+                [disabled]="!selectedMachineId">Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

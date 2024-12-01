@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <!-- Loader affiché pendant le chargement des détails -->
+  <div *ngIf="loading" class="d-flex align-items-center">
+    <strong role="status">Chargement...</strong>
+    <div class="spinner-border ms-auto" aria-hidden="true"></div>
+  </div>
+  <!-- Détails du lieu affichés une fois chargés -->
+  <div *ngIf="!loading">
+    <!-- Détails de la machine -->
+    <h2 class="mb-3"><ng-icon [name]="machine.type.icon" class="icon"></ng-icon>{{ machine.type.name }} - {{ machine.name }}</h2>
+    <p>
+      <strong>Fabricant : </strong>{{ machine.manufacturer.name }}
+    </p>
+
+    <hr>
+
+    <!-- Liste des lieux où la machine est présente -->
+    <h3 class="mb-4">Présent dans les lieux suivants</h3>
+
+    <ul class="list-group">
+      <li *ngFor="let venue of machine.venues"
+          class="list-group-item d-flex justify-content-between align-items-center">
+
+        <div>
+          <strong>{{ venue.name }}</strong> <span class="text-muted"> ({{ venue.city }})</span>
+        </div>
+
+        <!-- Bouton pour afficher les détails du lieu -->
+        <button class="btn btn-info btn-sm" (click)="viewVenueDetails(venue.id)">
+          <i class="bi bi-info-circle"></i> Détails
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
